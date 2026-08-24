@@ -198,6 +198,8 @@ function enableZoom(element) {
 
     let lastTapY = 0;
 
+    let lastTouchEndTime = 0;
+
 
     /*
      * Prevent browser gestures
@@ -274,6 +276,9 @@ function enableZoom(element) {
 
 
                         if (scale === 1) {
+
+                            scale =
+                                DOUBLE_TAP_ZOOM;
 
                             zoomToPoint(
                                 element,
@@ -485,6 +490,9 @@ function enableZoom(element) {
         "touchend",
         event => {
 
+            lastTouchEndTime =
+                Date.now();
+
             if (
                 event.touches.length < 2
             ) {
@@ -576,6 +584,10 @@ function enableZoom(element) {
         event => {
 
             event.preventDefault();
+
+            if (Date.now() - lastTouchEndTime < 500) {
+                return;
+            }
 
 
             if (scale === 1) {
